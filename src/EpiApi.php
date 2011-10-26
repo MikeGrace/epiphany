@@ -47,6 +47,8 @@ class EpiApi
     foreach($tmps as $type => $value)
       $GLOBALS[$type] = $value; 
 
+    // unset response to prevent contamination on multpile invokings in the same session
+    unset($GLOBALS["response"]);
     return $retval;
   }
 
