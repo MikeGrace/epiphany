@@ -23,6 +23,8 @@ class EpiRoute
   const routeKey= '__route__';
   const httpGet = 'GET';
   const httpPost= 'POST';
+  const httpPut = 'PUT';
+  const httpDelete = 'DELETE';
 
   /**
    * get('/', 'function');
@@ -47,7 +49,31 @@ class EpiRoute
   {
     $this->addRoute($route, $callback, self::httpPost, $isApi);
   }
+
+  /**
+   * put('/', 'function');
+   * @name  put
+   * @author  Sandro Meier <sandro.meier@fidelisfactory.ch>
+   * @param string $route
+   * @param mixed $callback
+   */
+  public function put($route, $callback, $isApi = false)
+  {
+    $this->addRoute($route, $callback, self::httpPut, $isApi);
+  }
   
+  /**
+   * delete('/', 'function');
+   * @name  delete
+   * @author  Sandro Meier <sandro.meier@fidelisfactory.ch>
+   * @param string $route
+   * @param mixed $callback
+   */
+  public function delete($route, $callback, $isApi = false)
+  {
+    $this->addRoute($route, $callback, self::httpDelete, $isApi);
+  }
+
   /**
    * NOT YET IMPLEMENTED
    * request('/', 'function', array(EpiRoute::httpGet, EpiRoute::httpPost));
@@ -108,9 +134,21 @@ class EpiRoute
     if(!$routeDef['postprocess'])
       return $response;
     else
-      echo json_encode($response);
-  }
+    {
+      // Only echo the response if it's not null. 
+      if (!is_null($response))
+      {
+        $response = json_encode($response);
+        if(isset($_GET['callback']))
+          $response = "{$_GET['callback']}($response)";
+        else
+          header('Content-Type: application/json');
 
+        header('Content-Length:' . strlen($response));
+        echo $response;
+      }
+    }
+  }
 
   /**
    * EpiRoute::getRoute($route); 
