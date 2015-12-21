@@ -28,7 +28,9 @@ In order for the routing to function you'll need to have `mod_rewrite` installed
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteRule ^(.*)\?*$ index.php?__route__=/$1 [L,QSA]
-	
+    # Some hosting requires '-Multiviews' for this to work
+    # Options -Multiviews
+
 ### Configuring Nginx
 
 In order for the routing to function you'll need to have `HttpRewriteModule` installed. You can specify the following inside of your server configuration.
